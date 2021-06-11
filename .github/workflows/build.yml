@@ -1,0 +1,52 @@
+name: Build database
+
+on:
+  schedule:
+    - cron: '0 4 15 * *'  # (At 04:00 on day-of-month 15.) https://crontab.guru/#0_4_15_*_*
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.8]
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      # Set up Python environment
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      # Install dependencies
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r development.txt
+
+      # Update version
+      - name: Update version
+        run: python update.py
+
+      - name: Commit changes
+        uses: EndBug/add-and-commit@v7 # You can change this to use a specific version
+        with:
+          default_author: github_actions
+
+      # Build wheels
+      - name: Build wheels
+        run: python setup.py sdist bdist_wheel
+
+      # Publish to pypi
+      - name: Publish to pypi
+        env:
+          TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+          TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+        run: twine upload --repository pypi dist/*
