@@ -1,6 +1,7 @@
 name: Build database
 
 on:
+  workflow_dispatch:
   schedule:
     - cron: '0 4 15 * *'  # (At 04:00 on day-of-month 15.) https://crontab.guru/#0_4_15_*_*
 
