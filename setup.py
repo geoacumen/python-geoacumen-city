@@ -36,7 +36,7 @@ setup(
     long_description=read("README.md"),
     long_description_content_type="text/markdown",
     classifiers=[],
-    install_requires=["maxminddb==1.5.4"],
+    install_requires=["maxminddb>=1.5.4"],
     packages=find_packages(include=["geoacumen_city", "geoacumen_city.*"]),
     include_package_data=True,
 )
