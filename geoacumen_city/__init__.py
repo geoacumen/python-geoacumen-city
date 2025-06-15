@@ -1,5 +1,5 @@
 import os
 
-__version__ = "2025.05.15"
+__version__ = "2025.06.15"
 
 db_path = os.path.join(os.path.dirname(__file__), "db/dbip-city-lite-latest.mmdb")
